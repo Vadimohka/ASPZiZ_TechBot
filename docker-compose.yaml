@@ -1,0 +1,8 @@
+services:
+  helpdesk_bot:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./helpdesk.sqlite3:/app/helpdesk.sqlite3  # сохраняем базу между перезапусками
