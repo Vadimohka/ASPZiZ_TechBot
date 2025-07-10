@@ -7,10 +7,12 @@ async def main():
     await init_db()
     bot = Bot(BOT_TOKEN, parse_mode="HTML")
     dp = Dispatcher()
-    # handlers import
-    from handlers import setup_handlers
-    setup_handlers(dp, bot)
-    print("Bot is running...")
+    # Handlers
+    from handlers import router as h_router
+    from admin import router as a_router
+    dp.include_router(h_router)
+    dp.include_router(a_router)
+    print("Helpdesk Bot is running.")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
