@@ -1,19 +1,20 @@
 FROM python:3.13-slim
 
-# Установка зависимостей для работы Python
-RUN apt-get update && apt-get install -y build-essential
+# Install system deps (если надо: gcc, libffi, ... — но здесь не нужны)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Копируем requirements и устанавливаем зависимости
-COPY requirements.txt ./
+# Copy requirements first for Docker cache efficiency
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем исходники бота
+# Копируем весь проект (исключая лишнее через .dockerignore)
 COPY . .
 
-# Указание переменной окружения для Python
-ENV PYTHONUNBUFFERED=1
+# Гарантируем папку для БД
+RUN mkdir -p /app/data
 
-# Запуск
+# main entry
 CMD ["python", "bot.py"]

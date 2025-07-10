@@ -1,8 +1,14 @@
 services:
   helpdesk_bot:
     build: .
+    container_name: helpdesk_bot
     restart: always
     env_file:
       - .env
     volumes:
-      - ./helpdesk.sqlite3:/app/helpdesk.sqlite3  # сохраняем базу между перезапусками
+      - ./data:/app/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
